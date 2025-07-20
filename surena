@@ -1,0 +1,67 @@
+// Camp 7 Teacher Portal (Frontend - React + Tailwind + Vercel Ready)
+// Basic layout with login, dashboard, and Google Drive upload stub
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+const users = {
+  admin: { password: "admin123", role: "admin" },
+  ...Object.fromEntries(
+    Array.from({ length: 20 }, (_, i) => [
+      `teacher${String.fromCharCode(65 + i)}`.toLowerCase(),
+      { password: `teacher${i + 1}`, role: "teacher" },
+    ])
+  ),
+};
+
+export default function Camp7Portal() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleLogin() {
+    const user = users[username.toLowerCase()];
+    if (user && user.password === password) {
+      setLoggedInUser({ username, role: user.role });
+    } else {
+      alert("Invalid credentials.");
+    }
+  }
+
+  if (!loggedInUser) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <Card className="max-w-md w-full shadow-xl">
+          <CardContent className="p-6 text-center">
+            <h1 className="text-xl font-semibold mb-2">Camp 7 Teacher Portal</h1>
+            <p className="italic text-sm text-gray-600 mb-4">
+              “Education is not the filling of a pail, but the lighting of a fire.” — William Butler Yeats
+            </p>
+            <Input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} className="mb-2" />
+            <Input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="mb-4" />
+            <Button onClick={handleLogin} className="bg-royal-blue text-white w-full">Login</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white p-6">
+      <h2 className="text-2xl font-bold mb-4">
+        Welcome, {loggedInUser.username.toUpperCase()} ({loggedInUser.role})
+      </h2>
+      <div className="bg-cream p-4 rounded-2xl shadow">
+        <p>This is your dashboard. File upload feature will be connected to Google Drive.</p>
+        <div className="mt-6">
+          <label className="block mb-2 text-sm font-semibold">Upload a file:</label>
+          <input type="file" className="p-2 border border-gray-300 rounded" />
+          <p className="text-xs mt-2 text-gray-600">(Integration with Google Drive coming next)</p>
+        </div>
+        <p className="mt-4 text-sm text-blue-700">(Coming soon: Admin panel, filter, download links)</p>
+      </div>
+    </div>
+  );
+}
