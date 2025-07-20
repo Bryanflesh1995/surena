@@ -1,0 +1,139 @@
+{
+  "name": "camp7-portal",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.4.1"
+  }
+}
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = nextConfig;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+import { useState } from 'react';
+import Head from 'next/head';
+import '../styles/globals.css';
+
+const users = {
+  admin: 'admin123',
+  'Teacher A': 'teachera123',
+  'Teacher B': 'teacherb123',
+  'Teacher C': 'teacherc123',
+  // Add Teacher D to Teacher T if needed
+};
+
+export default function Home() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  const handleLogin = () => {
+    if (users[username] === password) {
+      setLoggedInUser(username);
+    } else {
+      alert('Invalid credentials');
+    }
+  };
+
+  if (!loggedInUser) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-blue-900 text-white">
+        <Head>
+          <title>Camp 7 Teacher Portal</title>
+        </Head>
+        <h1 className="text-3xl font-bold mb-4">Camp 7 Teacher Portal</h1>
+        <p className="italic mb-6 text-center px-4">
+          “Education is not the filling of a pail, but the lighting of a fire.” — William Butler Yeats
+        </p>
+        <div className="bg-white text-black p-6 rounded-lg shadow-lg w-80 space-y-4">
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-full p-2 border border-gray-300 rounded"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border border-gray-300 rounded"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            className="w-full bg-blue-800 text-white p-2 rounded hover:bg-blue-600"
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (loggedInUser === 'admin') {
+    return (
+      <div className="min-h-screen bg-cream text-black p-6">
+        <h2 className="text-2xl font-bold mb-4">Welcome Admin</h2>
+        <p className="mb-4">You can view and manage teacher uploads here.</p>
+        <a href="/admin" className="text-blue-600 underline">Go to Admin Panel</a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white text-black p-6">
+      <h2 className="text-2xl font-bold mb-4">Welcome {loggedInUser}</h2>
+      <p className="mb-2">Upload your files below:</p>
+      <input type="file" className="p-2 border border-gray-300 rounded" />
+      <p className="mt-2 text-sm text-gray-500">* Uploads will be saved to admin panel (coming soon).</p>
+    </div>
+  );
+}
+import '../styles/globals.css';
+
+export default function AdminPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
+      <p>This page will show uploaded files from teachers soon.</p>
+    </div>
+  );
+}
+export default function handler(req, res) {
+  if (req.method === 'POST') {
+    // Placeholder: Handle file upload to Google Drive here in future
+    return res.status(200).json({ message: 'Upload received (not yet implemented).' });
+  }
+
+  res.status(405).json({ message: 'Method not allowed' });
+}
